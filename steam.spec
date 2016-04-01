@@ -85,6 +85,12 @@ Requires:       firewalld-filesystem
 Requires(post): firewalld-filesystem
 %endif
 
+# Required for hardware decoding during In-Home Streaming (intel)
+Requires:       libva-intel-driver%{?_isa}
+
+# Required for hardware decoding during In-Home Streaming (radeon/nouveau)
+Requires:       libvdpau%{?_isa}
+
 %description
 Installer for the Steam software distribution service.
 Steam is a software distribution service with an online store, automated
@@ -96,12 +102,6 @@ savegame and screenshot functionality, and many social features.
 Summary:        Use system libraries instead of the Steam Runtime
 Requires:       steam = %{version}-%{release}
 Buildarch:      noarch
-
-# Required for hardware decoding during In-Home Streaming (intel)
-Requires:       libva-intel-driver%{?_isa}
-
-# Required for hardware decoding during In-Home Streaming (radeon/nouveau)
-Requires:       libvdpau%{?_isa}
 
 # After the Steam client has been downloaded once, run the following command and
 # then adjust the list of requirements to remove dependencies pulled in by other
@@ -368,6 +368,7 @@ fi
 %changelog
 * Fri Apr 01 2016 Simone Caronni <negativo17@gmail.com> - 1.0.0.52-1
 - Update to 1.0.0.52, adds HTC Vive udev rules.
+- Move hardware accelerated streaming requirements to main package.
 
 * Thu Feb 25 2016 Simone Caronni <negativo17@gmail.com> - 1.0.0.51-6
 - Update UDev blacklist.
