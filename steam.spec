@@ -5,8 +5,8 @@
 %{!?firewalld_reload:%global firewalld_reload test -f /usr/bin/firewall-cmd && firewall-cmd --reload --quiet || :}
 
 Name:           steam
-Version:        1.0.0.51
-Release:        6%{?dist}
+Version:        1.0.0.52
+Release:        1%{?dist}
 Summary:        Installer for the Steam software distribution service
 # Redistribution and repackaging for Linux is allowed, see license file
 License:        Steam License Agreement
@@ -317,7 +317,7 @@ rm -fr %{buildroot}%{_docdir}/%{name}/ \
     %{buildroot}%{_bindir}/%{name}deps
 
 mkdir -p %{buildroot}%{_udevrulesdir}/
-install -m 644 -p lib/udev/rules.d/99-steam-controller-perms.rules \
+install -m 644 -p lib/udev/rules.d/* \
     %{SOURCE8} %{SOURCE9} %{buildroot}%{_udevrulesdir}/
 
 desktop-file-validate %{buildroot}/%{_datadir}/applications/%{name}.desktop
@@ -366,6 +366,9 @@ fi
 %endif
 
 %changelog
+* Fri Apr 01 2016 Simone Caronni <negativo17@gmail.com> - 1.0.0.52-1
+- Update to 1.0.0.52, adds HTC Vive udev rules.
+
 * Thu Feb 25 2016 Simone Caronni <negativo17@gmail.com> - 1.0.0.51-6
 - Update UDev blacklist.
 - Update README.Fedora, SELinux boolean no longer required.

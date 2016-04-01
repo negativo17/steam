@@ -1,6 +1,6 @@
 diff -Naur steam.old/steam steam/steam
---- steam.old/steam	2016-02-25 21:44:16.383495714 +0100
-+++ steam/steam	2016-02-25 21:44:25.367655195 +0100
+--- steam.old/steam	2016-04-01 17:25:09.418937439 +0200
++++ steam/steam	2016-04-01 17:25:15.787041584 +0200
 @@ -186,6 +186,33 @@
  # go to the install directory and run the client
  cp "$LAUNCHSTEAMBOOTSTRAPFILE" "$LAUNCHSTEAMDIR/bootstrap.tar.xz"
@@ -34,8 +34,8 @@ diff -Naur steam.old/steam steam/steam
 +
  if [ "`command -v tee`" != "" ]; then
  	mkdir -p --mode=777 /tmp/dumps
- 	exec "$LAUNCHSTEAMDIR/$STEAMBOOTSTRAP" "$@" 2>&1 | tee "/tmp/dumps/${USER}_stdout.txt"
-@@ -195,7 +222,3 @@
+     if [[ -f "/tmp/dumps/${USER}_stdout.txt" ]]; then
+@@ -198,7 +225,3 @@
  
  # Workaround for bug 3570: https://github.com/ValveSoftware/steam-for-linux/issues/3570
  rm -f /tmp/steam_chrome_shmem
