@@ -67,11 +67,12 @@ The package contains the following UDEV rules:
 - Steam Controller with USB adapter
 - HTC Vive HID Sensor with USB adapter
 
-  Support for the devices, rules originall shipped with Steam.
+  Support for the devices, rules originally shipped with Steam.
 
 - Nvidia Shield Controller (workaround for Mouse detection)
 
-  Workaround to have it properly detected as a game pad and not a mouse.
+  Workaround to have it properly detected as a game pad and not a mouse. This
+  prevents the "ghost" keypresses in Steam Big Picture mode.
 
 - Microsoft Microsoft Wireless Optical Desktop® 2.10
 - Microsoft Wireless Desktop - Comfort Edition
