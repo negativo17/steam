@@ -6,7 +6,7 @@
 
 Name:           steam
 Version:        1.0.0.52
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Installer for the Steam software distribution service
 # Redistribution and repackaging for Linux is allowed, see license file
 License:        Steam License Agreement
@@ -141,7 +141,6 @@ Requires:       flac-libs%{?_isa}
 Requires:       fontconfig%{?_isa}
 Requires:       freeglut%{?_isa}
 Requires:       freetype%{?_isa}
-Requires:       freetype-freeworld%{?_isa}
 Requires:       GConf2%{?_isa}
 Requires:       gdk-pixbuf2%{?_isa}
 Requires:       glib2%{?_isa}
@@ -366,6 +365,9 @@ fi
 %endif
 
 %changelog
+* Wed May 25 2016 Simone Caronni <negativo17@gmail.com> - 1.0.0.52-2
+- Remove freetype-freeworld as a dependency for the noruntime subpackage.
+
 * Fri Apr 01 2016 Simone Caronni <negativo17@gmail.com> - 1.0.0.52-1
 - Update to 1.0.0.52, adds HTC Vive udev rules.
 - Move hardware accelerated streaming requirements to main package.
