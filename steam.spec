@@ -6,7 +6,7 @@
 
 Name:           steam
 Version:        1.0.0.52
-Release:        2%{?dist}
+Release:        3%{?dist}
 Summary:        Installer for the Steam software distribution service
 # Redistribution and repackaging for Linux is allowed, see license file
 License:        Steam License Agreement
@@ -37,11 +37,15 @@ Patch0:         %{name}-3570.patch
 # https://github.com/ValveSoftware/steam-for-linux/issues/3273
 Patch1:         %{name}-3273.patch
 
+# Make Steam Controller usable as a GamePad:
+# https://steamcommunity.com/app/353370/discussions/0/490123197956024380/
+Patch2:         %{name}-controller-gamepad-emulation.patch
+
 # Do not remove libstdc++ from runtime on systems where mesa is compiled with
 # a statically linked libstdc++ (Fedora 22+) and enable option to run without
 # Ubuntu runtime:
 # https://github.com/ValveSoftware/steam-for-linux/issues/3697
-Patch2:         %{name}-disable-runtime.patch
+Patch3:         %{name}-disable-runtime.patch
 
 BuildRequires:  desktop-file-utils
 BuildRequires:  systemd
@@ -295,10 +299,11 @@ to unexpected results.
 %setup -q -n %{name}
 %patch0 -p1
 %patch1 -p1
+%patch2 -p1
 
 %if !0%{?rhel}
 # Steam no-runtime package
-%patch2 -p1
+%patch3 -p1
 %endif
 
 sed -i 's/\r$//' %{name}.desktop
@@ -365,6 +370,12 @@ fi
 %endif
 
 %changelog
+* Sat Aug 13 2016 Simone Caronni <negativo17@gmail.com> - 1.0.0.52-3
+- Make Steam Controller usable as a gamepad (#4062).
+- Update UDev rule for keyboards detected as joysticks.
+- Update README.Fedora file with notes about the Steam Controller, its update
+  process and update the list of devices with UDev rules.
+
 * Wed May 25 2016 Simone Caronni <negativo17@gmail.com> - 1.0.0.52-2
 - Remove freetype-freeworld as a dependency for the noruntime subpackage.
 
