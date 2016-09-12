@@ -23,16 +23,16 @@
   <update_contact>negativo17@gmail.com</update_contact>
   <screenshots>
     <screenshot type="default">
-      <caption>The steam utility main window</caption>
-      <image type="source" width="1158" height="664">http://negativo17.org.com/appstream/steam-0.png</image>
+      <caption>The main Steam library window</caption>
+      <image type="source" width="1600" height="900">http://negativo17.org/appstream/steam-0.png</image>
     </screenshot>
     <screenshot>
-      <caption>Monitoring GPU status</caption>
-      <image type="source" width="1414" height="884">http://negativo17.org.com/appstream/steam-1.png</image>
+      <caption>Steam Store interface</caption>
+      <image type="source" width="1600" height="900">http://negativo17.org/appstream/steam-1.png</image>
     </screenshot>
     <screenshot>
-      <caption>Application profiles creation</caption>
-      <image type="source" width="1638" height="984">http://negativo17.org.com/appstream/steam-2.png</image>
+      <caption>Steam community</caption>
+      <image type="source" width="1600" height="900">http://negativo17.org/appstream/steam-2.png</image>
     </screenshot>
   </screenshots>
 </component>
