@@ -337,7 +337,7 @@ install -pm 644 %{SOURCE1} %{SOURCE2} %{buildroot}%{_sysconfdir}/profile.d
 %endif
 
 %if 0%{?fedora} >= 25
-# install AppData and add modalias provides
+# Install AppData
 mkdir -p %{buildroot}%{_datadir}/appdata
 install -p -m 0644 %{SOURCE4} %{buildroot}%{_datadir}/appdata/
 %endif
