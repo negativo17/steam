@@ -6,7 +6,7 @@
 
 Name:           steam
 Version:        1.0.0.52
-Release:        4%{?dist}
+Release:        5%{?dist}
 Summary:        Installer for the Steam software distribution service
 # Redistribution and repackaging for Linux is allowed, see license file
 License:        Steam License Agreement
@@ -384,6 +384,9 @@ fi
 %endif
 
 %changelog
+* Fri Sep 23 2016 Simone Caronni <negativo17@gmail.com> - 1.0.0.52-5
+- Updated AppStream metadata.
+
 * Sun Sep 11 2016 Simone Caronni <negativo17@gmail.com> - 1.0.0.52-4
 - Do not run update-desktop-database on Fedora 25+.
 - Add AppStream metadata.
