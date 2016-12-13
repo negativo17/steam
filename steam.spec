@@ -6,7 +6,7 @@
 
 Name:           steam
 Version:        1.0.0.54
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Installer for the Steam software distribution service
 # Redistribution and repackaging for Linux is allowed, see license file
 License:        Steam License Agreement
@@ -45,11 +45,14 @@ Patch1:         %{name}-3273.patch
 # https://steamcommunity.com/app/353370/discussions/0/490123197956024380/
 Patch2:         %{name}-controller-gamepad-emulation.patch
 
+# Make "X" window button close the program instead of minimizing like "_"
+Patch3:         %{name}-3210.patch
+
 # Do not remove libstdc++ from runtime on systems where mesa is compiled with
 # a statically linked libstdc++ (Fedora 22+) and enable option to run without
 # Ubuntu runtime:
 # https://github.com/ValveSoftware/steam-for-linux/issues/3697
-Patch3:         %{name}-disable-runtime.patch
+Patch4:         %{name}-disable-runtime.patch
 
 BuildRequires:  desktop-file-utils
 BuildRequires:  systemd
@@ -304,10 +307,11 @@ to unexpected results.
 %patch0 -p1
 %patch1 -p1
 %patch2 -p1
+%patch3 -p1
 
 %if !0%{?rhel}
 # Steam no-runtime package
-%patch3 -p1
+%patch4 -p1
 %endif
 
 sed -i 's/\r$//' %{name}.desktop
@@ -387,6 +391,9 @@ fi
 %endif
 
 %changelog
+* Tue Dec 13 2016 Simone Caronni <negativo17@gmail.com> - 1.0.0.54-2
+- Re-add close functionality to X window button (#3210).
+
 * Mon Nov 28 2016 Simone Caronni <negativo17@gmail.com> - 1.0.0.54-1
 - Update to 1.0.0.54.
 - Update udev patch.
