@@ -6,7 +6,7 @@
 
 Name:           steam
 Version:        1.0.0.54
-Release:        2%{?dist}
+Release:        3%{?dist}
 Summary:        Installer for the Steam software distribution service
 # Redistribution and repackaging for Linux is allowed, see license file
 License:        Steam License Agreement
@@ -27,7 +27,7 @@ Source4:        %{name}.appdata.xml
 #
 # Microsoft patch accepted upstream, remove Microsoft entries when kernel
 # is at 4.9: https://bugzilla.redhat.com/show_bug.cgi?id=1325354#c14
-Source8:        https://raw.githubusercontent.com/denilsonsa/udev-joystick-blacklist/master/51-these-are-not-joysticks-rm.rules
+Source8:        https://raw.githubusercontent.com/denilsonsa/udev-joystick-blacklist/master/after_kernel_4_9/51-these-are-not-joysticks-rm.rules
 Source9:        https://raw.githubusercontent.com/cyndis/shield-controller-config/master/99-shield-controller.rules
 
 Source10:       README.Fedora
@@ -391,6 +391,10 @@ fi
 %endif
 
 %changelog
+* Sun Jan 08 2017 Simone Caronni <negativo17@gmail.com> - 1.0.0.54-3
+- Microsoft keyboards have been fixed in kernel 4.9 and backported to other
+  kernels.
+
 * Tue Dec 13 2016 Simone Caronni <negativo17@gmail.com> - 1.0.0.54-2
 - Re-add close functionality to X window button (#3210).
 
