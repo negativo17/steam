@@ -6,4 +6,4 @@
 
 # Unify close-to-tray behavior with other platforms. If using a distribution
 # that doesn't have proper compatible tray support set variable at 0.
-# STEAM_FRAME_FORCE_CLOSE=0
+STEAM_FRAME_FORCE_CLOSE=1

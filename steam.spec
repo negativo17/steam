@@ -6,7 +6,7 @@
 
 Name:           steam
 Version:        1.0.0.54
-Release:        5%{?dist}
+Release:        6%{?dist}
 Summary:        Installer for the Steam software distribution service
 # Redistribution and repackaging for Linux is allowed, see license file
 License:        Steam License Agreement
@@ -44,9 +44,6 @@ Patch1:         %{name}-3273.patch
 # Make Steam Controller usable as a GamePad:
 # https://steamcommunity.com/app/353370/discussions/0/490123197956024380/
 Patch2:         %{name}-controller-gamepad-emulation.patch
-
-# Make "X" window button close the program instead of minimizing like "_"
-Patch3:         %{name}-3210.patch
 
 BuildRequires:  desktop-file-utils
 BuildRequires:  systemd
@@ -116,7 +113,6 @@ and screenshot functionality, and many social features.
 %patch0 -p1
 %patch1 -p1
 %patch2 -p1
-%patch3 -p1
 
 sed -i 's/\r$//' %{name}.desktop
 sed -i 's/\r$//' steam_install_agreement.txt
@@ -189,6 +185,9 @@ fi
 %{_udevrulesdir}/*
 
 %changelog
+* Fri Feb 10 2017 Simone Caronni <negativo17@gmail.com> - 1.0.0.54-6
+- Remove patch for window button behaviour, use shell profile.
+
 * Fri Feb 10 2017 Simone Caronni <negativo17@gmail.com> - 1.0.0.54-5
 - Luckily the libdbusmenu-gtk3 library is required only on Fedora and not
   RHEL/CentOS.
