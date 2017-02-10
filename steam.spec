@@ -6,7 +6,7 @@
 
 Name:           steam
 Version:        1.0.0.54
-Release:        4%{?dist}
+Release:        5%{?dist}
 Summary:        Installer for the Steam software distribution service
 # Redistribution and repackaging for Linux is allowed, see license file
 License:        Steam License Agreement
@@ -96,8 +96,11 @@ Requires:       libva-intel-driver%{?_isa}
 # Required for hardware decoding during In-Home Streaming (radeon/nouveau)
 Requires:       libvdpau%{?_isa}
 
-# Required for having a functioning menu on the tray icon
+%if 0%{?fedora}
+# Required for having a functioning menu on the tray icon on Fedora
+# https://github.com/ValveSoftware/steam-for-linux/issues/4795
 Requires:       libdbusmenu-gtk3%{?_isa}
+%endif
 
 Provides:       steam-noruntime = %{?epoch:%{epoch}:}%{version}-%{release}
 Obsoletes:      steam-noruntime < %{?epoch:%{epoch}:}%{version}-%{release}
@@ -186,6 +189,10 @@ fi
 %{_udevrulesdir}/*
 
 %changelog
+* Fri Feb 10 2017 Simone Caronni <negativo17@gmail.com> - 1.0.0.54-5
+- Luckily the libdbusmenu-gtk3 library is required only on Fedora and not
+  RHEL/CentOS.
+
 * Fri Feb 10 2017 Simone Caronni <negativo17@gmail.com> - 1.0.0.54-4
 - Remove noruntime subpackage, use default new mechanism that uses host
   libraries as per client update of 19th January (5th January for beta):
