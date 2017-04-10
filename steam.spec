@@ -6,7 +6,7 @@
 
 Name:           steam
 Version:        1.0.0.54
-Release:        7%{?dist}
+Release:        8%{?dist}
 Summary:        Installer for the Steam software distribution service
 # Redistribution and repackaging for Linux is allowed, see license file
 License:        Steam License Agreement
@@ -178,6 +178,9 @@ fi
 %{_udevrulesdir}/*
 
 %changelog
+* Mon Apr 10 2017 Simone Caronni <negativo17@gmail.com> - 1.0.0.54-8
+- Update udev rules.
+
 * Sun Feb 12 2017 Simone Caronni <negativo17@gmail.com> - 1.0.0.54-7
 - Remove libstdc++ patch.
 - Update udev rules.
