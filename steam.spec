@@ -138,7 +138,7 @@ install -D -m 644 -p %{SOURCE3} \
 mkdir -p %{buildroot}%{_sysconfdir}/profile.d
 install -pm 644 %{SOURCE1} %{SOURCE2} %{buildroot}%{_sysconfdir}/profile.d
 
-%if 0%{?fedora} >= 25
+%if 0%{?fedora}
 # Install AppData
 mkdir -p %{buildroot}%{_datadir}/appdata
 install -p -m 0644 %{SOURCE4} %{buildroot}%{_datadir}/appdata/
@@ -146,13 +146,13 @@ install -p -m 0644 %{SOURCE4} %{buildroot}%{_datadir}/appdata/
 
 %post
 /bin/touch --no-create %{_datadir}/icons/hicolor &>/dev/null || :
-%if 0%{?fedora} == 24 || 0%{?rhel} == 7
+%if 0%{?rhel} == 7
 /usr/bin/update-desktop-database &> /dev/null || :
 %endif
 %firewalld_reload
 
 %postun
-%if 0%{?fedora} == 24 || 0%{?rhel} == 7
+%if 0%{?rhel} == 7
 /usr/bin/update-desktop-database &> /dev/null || :
 %endif
 if [ $1 -eq 0 ] ; then
@@ -167,7 +167,7 @@ fi
 %license COPYING steam_install_agreement.txt
 %doc README debian/changelog README.Fedora
 %{_bindir}/%{name}
-%if 0%{?fedora} >= 25
+%if 0%{?fedora}
 %{_datadir}/appdata/%{name}.appdata.xml
 %endif
 %{_datadir}/applications/%{name}.desktop
