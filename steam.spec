@@ -6,7 +6,7 @@
 
 Name:           steam
 Version:        1.0.0.54
-Release:        10%{?dist}
+Release:        13%{?dist}
 Summary:        Installer for the Steam software distribution service
 # Redistribution and repackaging for Linux is allowed, see license file
 License:        Steam License Agreement
@@ -46,8 +46,10 @@ BuildRequires:  systemd
 Requires:       tar
 Requires:       zenity
 
+%if 0%{?fedora} == 25 || 0%{?rhel} == 7
 # Required for S3 compressed textures on free drivers (intel/radeon/nouveau)
 Requires:       libtxc_dxtn%{?_isa}
+%endif
 
 # Required for running the package on 32 bit systems with free drivers
 Requires:       mesa-dri-drivers%{?_isa}
@@ -138,11 +140,9 @@ install -D -m 644 -p %{SOURCE3} \
 mkdir -p %{buildroot}%{_sysconfdir}/profile.d
 install -pm 644 %{SOURCE1} %{SOURCE2} %{buildroot}%{_sysconfdir}/profile.d
 
-%if 0%{?fedora}
 # Install AppData
 mkdir -p %{buildroot}%{_datadir}/appdata
 install -p -m 0644 %{SOURCE4} %{buildroot}%{_datadir}/appdata/
-%endif
 
 %post
 /bin/touch --no-create %{_datadir}/icons/hicolor &>/dev/null || :
@@ -181,6 +181,10 @@ fi
 %{_udevrulesdir}/*
 
 %changelog
+* Thu Nov 16 2017 Simone Caronni <negativo17@gmail.com> - 1.0.0.54-13
+- Update udev rules.
+- Do not require libtxc_dxtn on Fedora 26+.
+
 * Thu Jun 08 2017 Simone Caronni <negativo17@gmail.com> - 1.0.0.54-10
 - Require alsa-plugins-pulseaudio and libatomic.
 
