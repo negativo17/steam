@@ -1,12 +1,9 @@
 # Binary package, no debuginfo should be generated
 %global debug_package %{nil}
 
-# If firewalld macro is not defined, define it here:
-%{!?firewalld_reload:%global firewalld_reload test -f /usr/bin/firewall-cmd && firewall-cmd --reload --quiet || :}
-
 Name:           steam
 Version:        1.0.0.54
-Release:        13%{?dist}
+Release:        17%{?dist}
 Summary:        Installer for the Steam software distribution service
 # Redistribution and repackaging for Linux is allowed, see license file
 License:        Steam License Agreement
@@ -35,9 +32,13 @@ Source10:       README.Fedora
 # https://github.com/ValveSoftware/steam-for-linux/issues/3570
 Patch0:         %{name}-3570.patch
 
+# Remove libstdc++ from runtime:
+# https://github.com/ValveSoftware/steam-for-linux/issues/3273
+Patch1:         %{name}-3273.patch
+
 # Make Steam Controller usable as a GamePad:
 # https://steamcommunity.com/app/353370/discussions/0/490123197956024380/
-Patch1:         %{name}-controller-gamepad-emulation.patch
+Patch2:         %{name}-controller-gamepad-emulation.patch
 
 BuildRequires:  desktop-file-utils
 BuildRequires:  systemd
@@ -75,16 +76,16 @@ Requires:       systemd-libs%{?_isa}
 
 # Required for the firewall rules
 # http://fedoraproject.org/wiki/PackagingDrafts/ScriptletSnippets/Firewalld
-%if 0%{?rhel}
-Requires:       firewalld
-Requires(post): firewalld
-%else
 Requires:       firewalld-filesystem
 Requires(post): firewalld-filesystem
-%endif
 
 # Required for hardware decoding during In-Home Streaming (intel)
+# Since libva-intel-driver on f28+ there is hw detection with appstream
+%if (0%{?fedora} && 0%{?fedora} < 28) || 0%{?rhel} == 7
 Requires:       libva-intel-driver%{?_isa}
+%else
+Requires:       libva%{?_isa}
+%endif
 
 # Required for hardware decoding during In-Home Streaming (radeon/nouveau)
 Requires:       libvdpau%{?_isa}
@@ -109,9 +110,7 @@ installation, automatic updates, achievements, SteamCloud synchronized savegame
 and screenshot functionality, and many social features.
 
 %prep
-%setup -q -n %{name}
-%patch0 -p1
-%patch1 -p1
+%autosetup -p1 -n %{name}
 
 sed -i 's/\r$//' %{name}.desktop
 sed -i 's/\r$//' steam_install_agreement.txt
@@ -140,15 +139,13 @@ install -D -m 644 -p %{SOURCE3} \
 mkdir -p %{buildroot}%{_sysconfdir}/profile.d
 install -pm 644 %{SOURCE1} %{SOURCE2} %{buildroot}%{_sysconfdir}/profile.d
 
-%if 0%{?fedora}
 # Install AppData
 mkdir -p %{buildroot}%{_datadir}/appdata
 install -p -m 0644 %{SOURCE4} %{buildroot}%{_datadir}/appdata/
-%endif
 
 %post
-/bin/touch --no-create %{_datadir}/icons/hicolor &>/dev/null || :
 %if 0%{?rhel} == 7
+/bin/touch --no-create %{_datadir}/icons/hicolor &>/dev/null || :
 /usr/bin/update-desktop-database &> /dev/null || :
 %endif
 %firewalld_reload
@@ -156,7 +153,7 @@ install -p -m 0644 %{SOURCE4} %{buildroot}%{_datadir}/appdata/
 %postun
 %if 0%{?rhel} == 7
 /usr/bin/update-desktop-database &> /dev/null || :
-%endif
+
 if [ $1 -eq 0 ] ; then
     /bin/touch --no-create %{_datadir}/icons/hicolor &>/dev/null
     %{_bindir}/gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
@@ -164,14 +161,13 @@ fi
 
 %posttrans
 %{_bindir}/gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
+%endif
 
 %files
 %license COPYING steam_install_agreement.txt
 %doc README debian/changelog README.Fedora
 %{_bindir}/%{name}
-%if 0%{?fedora}
 %{_datadir}/appdata/%{name}.appdata.xml
-%endif
 %{_datadir}/applications/%{name}.desktop
 %{_datadir}/icons/hicolor/*/apps/%{name}.png
 %{_datadir}/pixmaps/%{name}.png
@@ -183,9 +179,30 @@ fi
 %{_udevrulesdir}/*
 
 %changelog
-* Thu Nov 16 2017 Simone Caronni <negativo17@gmail.com> - 1.0.0.54-13
+* Tue Mar 27 2018 Simone Caronni <negativo17@gmail.com> - 1.0.0.54-17
+- Re-add icon cache scriptlets for EPEL, as it's still required.
+- Remove firewalld differences for EPEL.
+
+* Tue Mar 27 2018 Simone Caronni <negativo17@gmail.com> - 1.0.0.54-16
+- Restore libstdc++ patch.
 - Update udev rules.
+- Remove obsolete scriptlets.
+
+* Mon Mar 26 2018 Nicolas Chauvet <kwizart@gmail.com> - 1.0.0.54-15
+- Switch to libva with f28+
+
+* Fri Mar 02 2018 RPM Fusion Release Engineering <leigh123linux@googlemail.com> - 1.0.0.54-14
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_28_Mass_Rebuild
+
+* Thu Nov 16 2017 Simone Caronni <negativo17@gmail.com> - 1.0.0.54-13
 - Do not require libtxc_dxtn on Fedora 26+.
+
+* Thu Nov 16 2017 Simone Caronni <negativo17@gmail.com> - 1.0.0.54-12
+- Do not require libtxc_dxtn on Fedora 28+ (Mesa 17.3.0+).
+- Update udev rules.
+
+* Thu Aug 31 2017 RPM Fusion Release Engineering <kwizart@rpmfusion.org> - 1.0.0.54-11
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_27_Mass_Rebuild
 
 * Thu Jun 08 2017 Simone Caronni <negativo17@gmail.com> - 1.0.0.54-10
 - Require alsa-plugins-pulseaudio and libatomic.
@@ -197,22 +214,25 @@ fi
 * Mon Apr 10 2017 Simone Caronni <negativo17@gmail.com> - 1.0.0.54-8
 - Update udev rules.
 
-* Sun Feb 12 2017 Simone Caronni <negativo17@gmail.com> - 1.0.0.54-7
+* Sun Mar 26 2017 RPM Fusion Release Engineering <kwizart@rpmfusion.org> - 1.0.0.54-7
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_26_Mass_Rebuild
+
+* Sun Feb 12 2017 Simone Caronni <negativo17@gmail.com> - 1.0.0.54-6
 - Remove libstdc++ patch.
 - Update udev rules.
 - Update docs for hardware encoding/decoding information.
 
-* Fri Feb 10 2017 Simone Caronni <negativo17@gmail.com> - 1.0.0.54-6
-- Remove patch for window button behaviour, use shell profile.
-
 * Fri Feb 10 2017 Simone Caronni <negativo17@gmail.com> - 1.0.0.54-5
-- Luckily the libdbusmenu-gtk3 library is required only on Fedora and not
-  RHEL/CentOS.
-
-* Fri Feb 10 2017 Simone Caronni <negativo17@gmail.com> - 1.0.0.54-4
 - Remove noruntime subpackage, use default new mechanism that uses host
   libraries as per client update of 19th January (5th January for beta):
   http://store.steampowered.com/news/26953/
+- Add libdbusmenu-gtk3 library requirement on Fedora (luckily not RHEL/CentOS).
+- Remove patch for window button behaviour, use shell profile.
+
+* Sun Jan 22 2017 Simone Caronni <negativo17@gmail.com> - 1.0.0.54-4
+- Fix Source URL for post kernel 4.9 udev rules.
+- Reintroduce optional and not endorsed by Valve noruntime subpackage for using
+  all system libraries in place of all the Ubuntu runtime ones.
 
 * Sun Jan 08 2017 Simone Caronni <negativo17@gmail.com> - 1.0.0.54-3
 - Microsoft keyboards have been fixed in kernel 4.9 and backported to other
@@ -221,7 +241,7 @@ fi
 * Tue Dec 13 2016 Simone Caronni <negativo17@gmail.com> - 1.0.0.54-2
 - Re-add close functionality to X window button (#3210).
 
-* Mon Nov 28 2016 Simone Caronni <negativo17@gmail.com> - 1.0.0.54-1
+* Thu Dec 01 2016 Simone Caronni <negativo17@gmail.com> - 1.0.0.54-1
 - Update to 1.0.0.54.
 - Update udev patch.
 
@@ -229,71 +249,34 @@ fi
 - Update to 1.0.0.53.
 - Update udev rules.
 
-* Fri Sep 23 2016 Simone Caronni <negativo17@gmail.com> - 1.0.0.52-5
-- Updated AppStream metadata.
-
-* Sun Sep 11 2016 Simone Caronni <negativo17@gmail.com> - 1.0.0.52-4
+* Sat Sep 24 2016 Simone Caronni <negativo17@gmail.com> - 1.0.0.52-3
 - Do not run update-desktop-database on Fedora 25+.
 - Add AppStream metadata.
 
-* Sat Aug 13 2016 Simone Caronni <negativo17@gmail.com> - 1.0.0.52-3
+* Sat Aug 13 2016 Simone Caronni <negativo17@gmail.com> - 1.0.0.52-2
 - Make Steam Controller usable as a gamepad (#4062).
 - Update UDev rule for keyboards detected as joysticks.
 - Update README.Fedora file with notes about the Steam Controller, its update
   process and update the list of devices with UDev rules.
 
-* Wed May 25 2016 Simone Caronni <negativo17@gmail.com> - 1.0.0.52-2
-- Remove freetype-freeworld as a dependency for the noruntime subpackage.
-
 * Fri Apr 01 2016 Simone Caronni <negativo17@gmail.com> - 1.0.0.52-1
 - Update to 1.0.0.52, adds HTC Vive udev rules.
-- Move hardware accelerated streaming requirements to main package.
+- Update patches.
 
-* Thu Feb 25 2016 Simone Caronni <negativo17@gmail.com> - 1.0.0.51-6
-- Update UDev blacklist.
-- Update README.Fedora, SELinux boolean no longer required.
-
-* Thu Feb 25 2016 Simone Caronni <negativo17@gmail.com> - 1.0.0.51-5
-- Apply #3273 workaround only on systems where Mesa has not been statically
-  compiled with libstdc++ (mesa-11.1.0-2.20151218.fc23+).
-
-* Mon Feb 01 2016 Simone Caronni <negativo17@gmail.com> - 1.0.0.51-4
-- Fix blacklist udev rules.
+* Thu Feb 25 2016 Simone Caronni <negativo17@gmail.com> - 1.0.0.51-2
+- Integrate FirewallD rules (still not enabled by default).
 - Add support for Nvidia Shield Controller.
-- Update README.Fedora accordingly.
-
-* Sun Jan 31 2016 Simone Caronni <negativo17@gmail.com> - 1.0.0.51-3
 - Add UDev rules for keyboards detected as joysticks:
   https://github.com/ValveSoftware/steam-for-linux/issues/3384
   https://bugzilla.kernel.org/show_bug.cgi?id=28912
   https://github.com/denilsonsa/udev-joystick-blacklist
-
-* Sun Dec 06 2015 Simone Caronni <negativo17@gmail.com> - 1.0.0.51-2
-- Update requirements.
+- Update README.Fedora accordingly.
 
 * Fri Nov 20 2015 Simone Caronni <negativo17@gmail.com> - 1.0.0.51-1
 - Update to 1.0.0.51.
+- Add dependencies for In-Home Streaming decoding.
 - Updated udev rules for the Steam Controller and HTC Vive VR headset.
 - Update isa requirements.
-
-* Wed Nov 18 2015 Simone Caronni <negativo17@gmail.com> - 1.0.0.50-8
-- Remove Compiz and Emerald dependencies from noruntime.
-
-* Sat Oct 31 2015 Simone Caronni <negativo17@gmail.com> - 1.0.0.50-7
-- Update requirements for Fedora 23+.
-
-* Thu Jul 09 2015 Simone Caronni <negativo17@gmail.com> - 1.0.0.50-4
-- Integrate FirewallD rules.
-- Add requirement on firewalld for CentOS/RHEL and on firewalld-filesystem
-  for Fedora.
-
-* Wed Jul 08 2015 Simone Caronni <negativo17@gmail.com> - 1.0.0.50-3
-- Re-add support for the noruntime subpackage (not for CentOS/RHEL).
-- Integrate patches in noruntime patch.
-- In-Home streaming requirements:
-    libva-intel-driver (intel)
-    libvdpau (nouveau/radeon)
-- Updated README.Fedora for In-Home streaming.
 
 * Mon May 25 2015 Simone Caronni <negativo17@gmail.com> - 1.0.0.50-2
 - Add license macro.
