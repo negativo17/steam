@@ -2,8 +2,8 @@
 %global debug_package %{nil}
 
 Name:           steam
-Version:        1.0.0.54
-Release:        18%{?dist}
+Version:        1.0.0.56
+Release:        1%{?dist}
 Summary:        Installer for the Steam software distribution service
 # Redistribution and repackaging for Linux is allowed, see license file
 License:        Steam License Agreement
@@ -53,8 +53,24 @@ Requires:       zenity
 Requires:       libtxc_dxtn%{?_isa}
 %endif
 
-# Required for running the package on 32 bit systems with free drivers
+# Most games use OpenGL. i686 version of this package is necessary even on
+# x86_64 systems for running 32bit games.
 Requires:       mesa-dri-drivers%{?_isa}
+
+# Some games already use Vulkan. Also required for Steam Play allowing to run
+# Windows games through emulation. Again, i686 version is necessary even on
+# x86_64 systems.
+Requires:       mesa-vulkan-drivers%{?_isa}
+Requires:       vulkan-loader%{?_isa}
+
+# Pull in native arch drivers as well. By not specifying _isa macro, DNF
+# prefers native arch package (x86_64 on x86_64, i686 on i686). This will
+# make sure people have all necessary drivers for both i686 and x86_64 games.
+# This "trick" might stop working in future DNF versions, but shouldn't break
+# anything.
+Requires:       mesa-dri-drivers
+Requires:       mesa-vulkan-drivers
+Requires:       vulkan-loader
 
 # Minimum requirements for starting the steam client for the first time
 Requires:       alsa-lib%{?_isa}
@@ -114,7 +130,7 @@ and screenshot functionality, and many social features.
 %autosetup -p1 -n %{name}
 
 sed -i 's/\r$//' %{name}.desktop
-sed -i 's/\r$//' steam_install_agreement.txt
+sed -i 's/\r$//' steam_subscriber_agreement.txt
 
 cp %{SOURCE10} .
 
@@ -151,8 +167,9 @@ install -p -m 0644 %{SOURCE4} %{buildroot}%{_datadir}/appdata/
 %endif
 %firewalld_reload
 
-%postun
 %if 0%{?rhel} == 7
+
+%postun
 /usr/bin/update-desktop-database &> /dev/null || :
 
 if [ $1 -eq 0 ] ; then
@@ -162,10 +179,11 @@ fi
 
 %posttrans
 %{_bindir}/gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
+
 %endif
 
 %files
-%license COPYING steam_install_agreement.txt
+%license COPYING steam_subscriber_agreement.txt
 %doc README debian/changelog README.Fedora
 %{_bindir}/%{name}
 %{_datadir}/appdata/%{name}.appdata.xml
@@ -180,6 +198,16 @@ fi
 %{_udevrulesdir}/*
 
 %changelog
+* Thu Oct 11 2018 Simone Caronni <negativo17@gmail.com> - 1.0.0.56-1
+- Update to 1.0.0.56.
+
+* Wed Oct 10 2018 Kamil Páral <kamil.paral@gmail.com> - 1.0.0.54-20
+- require vulkan drivers
+- require x86_64 graphics drivers when installed on x86_64 systems
+
+* Sun Aug 19 2018 RPM Fusion Release Engineering <leigh123linux@gmail.com> - 1.0.0.54-19
+- Rebuilt for Fedora 29 Mass Rebuild binutils issue
+
 * Tue Jul 24 2018 Simone Caronni <negativo17@gmail.com> - 1.0.0.54-18
 - Add firewalld-filesystem to BuildRequires to expand firewalld_reload macro.
 
