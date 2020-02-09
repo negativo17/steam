@@ -74,28 +74,29 @@ Joysticks, keyboards and game pads
 
 The package contains the UDEV rules for the following devices:
 
-- Valve USB devices
-- Steam Controller udev write access
-- Valve HID devices over USB hidraw
-- Valve HID devices over bluetooth hidraw
-- DualShock 4 over USB hidraw
-- DualShock 4 wireless adapter over USB hidraw
-- DualShock 4 Slim over USB hidraw
+- Armor Armor 3 Pad PS4
 - DualShock 4 over bluetooth hidraw
+- DualShock 4 over USB hidraw
 - DualShock 4 Slim over bluetooth hidraw
-- Nintendo Switch Pro Controller over USB hidraw
-- Nintendo Switch Pro Controller over bluetooth hidraw
-- Nacon PS4 Revolution Pro Controller
-- Razer Raiju PS4 Controller
-- Razer Panthera Arcade Stick
-- Mad Catz - Street Fighter V Arcade FightPad PRO
-- Mad Catz - Street Fighter V Arcade FightStick TE S+
+- DualShock 4 Slim over USB hidraw
+- DualShock 4 wireless adapter over USB hidraw
 - EMiO Elite Controller for PS4
-- HORI RAP4
 - HORIPAD 4 FPS
 - HORIPAD 4 FPS Plus
-- Armor Armor 3 Pad PS4
+- HORI RAP4
+- Mad Catz - Street Fighter V Arcade FightPad PRO
+- Mad Catz - Street Fighter V Arcade FightStick TE S+
+- Nacon PS4 Revolution Pro Controller
+- Nintendo Switch Pro Controller over bluetooth hidraw
+- Nintendo Switch Pro Controller over USB hidraw
+- Razer Panthera Arcade Stick
+- Razer Raiju PS4 Controller
+- Steam Controller udev write access
 - STRIKEPAD PS4 Grip Add-on
+- Valve HID devices over bluetooth hidraw
+- Valve HID devices over USB hidraw
+- Valve USB devices
+- ZeroPlus P4 (hitbox)
 
 Additional support for Nvidia devices (including mouse workaround for early
 devices):
