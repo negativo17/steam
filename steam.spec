@@ -3,7 +3,7 @@
 
 Name:           steam
 Version:        1.0.0.61
-Release:        6%{?dist}
+Release:        9%{?dist}
 Summary:        Installer for the Steam software distribution service
 # Redistribution and repackaging for Linux is allowed, see license file
 License:        Steam License Agreement
@@ -198,7 +198,7 @@ fi
 %endif
 
 %changelog
-* Sun Feb 09 2020 Simone Caronni <negativo17@gmail.com> - 1.0.0.61-6
+* Sun Feb 09 2020 Simone Caronni <negativo17@gmail.com> - 1.0.0.61-9
 - Update README.Fedora
 - Require gamemode on Fedora & CentOS/RHEL 8.
 - Adjust distribution conditionals.
