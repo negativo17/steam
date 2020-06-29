@@ -2,8 +2,8 @@
 %global debug_package %{nil}
 
 Name:           steam
-Version:        1.0.0.62
-Release:        3%{?dist}
+Version:        1.0.0.64
+Release:        1%{?dist}
 Summary:        Installer for the Steam software distribution service
 # Redistribution and repackaging for Linux is allowed, see license file. udev rules are MIT.
 License:        Steam License Agreement and MIT
@@ -202,6 +202,9 @@ fi
 %endif
 
 %changelog
+* Mon Jun 29 2020 Simone Caronni <negativo17@gmail.com> - 1.0.0.64-1
+- Update to 1.0.0.64.
+
 * Sun May 24 2020 Leigh Scott <leigh123linux@gmail.com> - 1.0.0.62-3
 - Use boolean conditional for gnome-shell-extension-gamemode (rfbz#5659)
 
