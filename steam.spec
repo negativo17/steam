@@ -3,7 +3,7 @@
 
 Name:           steam
 Version:        1.0.0.68
-Release:        2%{?dist}
+Release:        3%{?dist}
 Summary:        Installer for the Steam software distribution service
 # Redistribution and repackaging for Linux is allowed, see license file. udev rules are MIT.
 License:        Steam License Agreement and MIT
@@ -107,7 +107,11 @@ Requires:       libdbusmenu-gtk3%{?_isa} >= 16.04.0
 Requires:       libatomic%{?_isa}
 
 # Required by Shank
+%if 0%{?fedora} || 0%{?rhel} >= 8
+Requires:       (alsa-plugins-pulseaudio%{?_isa} or pipewire-alsa%{?_isa})
+%else
 Requires:       alsa-plugins-pulseaudio%{?_isa}
+%endif
 
 # Game performance is increased with gamemode (for games that support it)
 %if 0%{?fedora} || 0%{?rhel} >= 8
@@ -204,6 +208,9 @@ fi
 %{_prefix}/lib/systemd/user.conf.d/01-steam.conf
 
 %changelog
+* Wed Dec 16 2020 Nicolas Chauvet <kwizart@gmail.com> - 1.0.0.68-3
+- Switch to boolean deps for pipewire/pa alsa support
+
 * Fri Dec 04 2020 Simone Caronni <negativo17@gmail.com> - 1.0.0.68-2
 - Require xdg-desktop-portal for Proton.
 
