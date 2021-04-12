@@ -33,6 +33,7 @@ Patch0:         %{name}-makefile.patch
 Patch1:         %{name}-no-icon-on-desktop.patch
 
 BuildRequires:  desktop-file-utils
+BuildRequires:  make
 BuildRequires:  systemd
 
 # Required to run the initial setup
