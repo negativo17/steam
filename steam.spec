@@ -2,8 +2,8 @@
 %global debug_package %{nil}
 
 Name:           steam
-Version:        1.0.0.68
-Release:        6%{?dist}
+Version:        1.0.0.70
+Release:        1%{?dist}
 Summary:        Installer for the Steam software distribution service
 # Redistribution and repackaging for Linux is allowed, see license file. udev rules are MIT.
 License:        Steam License Agreement and MIT
@@ -26,10 +26,6 @@ Source6:        https://raw.githubusercontent.com/denilsonsa/udev-joystick-black
 
 # Configure limits in systemd
 Source7:        01-steam.conf
-
-# Newer UDEV rules
-Source10:       https://raw.githubusercontent.com/ValveSoftware/steam-devices/master/60-steam-input.rules
-Source11:       https://raw.githubusercontent.com/ValveSoftware/steam-devices/master/60-steam-vr.rules
 
 # Do not install desktop file in lib/steam, do not install apt sources
 Patch0:         %{name}-makefile.patch
@@ -152,7 +148,7 @@ rm -fr %{buildroot}%{_docdir}/%{name}/ \
     %{buildroot}%{_bindir}/%{name}deps
 
 mkdir -p %{buildroot}%{_udevrulesdir}/
-install -m 644 -p %{SOURCE10} %{SOURCE11} %{SOURCE6} \
+install -m 644 -p subprojects/steam-devices/*.rules %{SOURCE6} \
     %{buildroot}%{_udevrulesdir}/
 
 # Environment files
@@ -209,6 +205,13 @@ fi
 %{_prefix}/lib/systemd/user.conf.d/01-steam.conf
 
 %changelog
+* Mon Apr 12 2021 Simone Caronni <negativo17@gmail.com> - 1.0.0.70-1
+- Update to 1.0.0.70.
+- Switch to tarball provided steam-devices udev rules.
+
+* Thu Feb 04 2021 RPM Fusion Release Engineering <leigh123linux@gmail.com> - 1.0.0.68-7
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_34_Mass_Rebuild
+
 * Sun Dec 27 2020 Simone Caronni <negativo17@gmail.com> - 1.0.0.68-6
 - Update build conditionals for Pipewire/ALSA.
 
@@ -235,8 +238,12 @@ fi
 * Tue Aug 25 2020 Simone Caronni <negativo17@gmail.com> - 1.0.0.66-1
 - Update to 1.0.0.66.
 
+* Wed Aug 19 2020 RPM Fusion Release Engineering <leigh123linux@gmail.com> - 1.0.0.64-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_33_Mass_Rebuild
+
 * Mon Jun 29 2020 Simone Caronni <negativo17@gmail.com> - 1.0.0.64-1
 - Update to 1.0.0.64.
+- RHEL / CentOS 7 x86_64 has 32/64 bit Mesa Vulkan drivers.
 
 * Sun May 24 2020 Leigh Scott <leigh123linux@gmail.com> - 1.0.0.62-3
 - Use boolean conditional for gnome-shell-extension-gamemode (rfbz#5659)
@@ -257,11 +264,23 @@ fi
   to get back to the Steam client.
 - Update udev rules.
 
-* Sat Nov 02 2019 Simone Caronni <negativo17@gmail.com> - 1.0.0.61-5
-- Do not remove bundled libstdc++.
+* Wed Feb 05 2020 RPM Fusion Release Engineering <leigh123linux@gmail.com> - 1.0.0.61-8
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_32_Mass_Rebuild
 
-* Sat Sep 07 2019 Simone Caronni <negativo17@gmail.com> - 1.0.0.61-3
+* Mon Dec 16 2019 Leigh Scott <leigh123linux@googlemail.com> - 1.0.0.61-7
+- Revert last commit
+
+* Mon Dec 16 2019 Leigh Scott <leigh123linux@googlemail.com> - 1.0.0.61-6
+- Add boolean requires for nvidia i686 libs
+
+* Sat Nov 02 2019 Simone Caronni <negativo17@gmail.com> - 1.0.0.61-5
+- Do not remove bundled libstdc++ (#5421).
+
+* Sat Sep 07 2019 Simone Caronni <negativo17@gmail.com> - 1.0.0.61-4
 - Firewall rules are now included in base firewalld also on RHEL/CentOS 7.
+
+* Sat Aug 10 2019 RPM Fusion Release Engineering <leigh123linux@gmail.com> - 1.0.0.61-3
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_31_Mass_Rebuild
 
 * Wed Jul 31 2019 Simone Caronni <negativo17@gmail.com> - 1.0.0.61-2
 - Remove libdbusmenu-gtk2 requirement (#5322).
@@ -271,6 +290,9 @@ fi
 
 * Fri Mar 22 2019 Kamil Páral <kamil.paral@gmail.com> - 1.0.0.59-9
 - add Recommends: gamemode
+
+* Tue Mar 05 2019 RPM Fusion Release Engineering <leigh123linux@gmail.com> - 1.0.0.59-8
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_30_Mass_Rebuild
 
 * Sat Jan 26 2019 Simone Caronni <negativo17@gmail.com> - 1.0.0.59-7
 - Clean up SPEC file a bit.
@@ -288,6 +310,10 @@ fi
 
 * Wed Jan 02 2019 Kamil Páral <kamil.paral@gmail.com> - 1.0.0.59-3
 - NOFILE limit doesn't need to be raised since F30 (systemd 240)
+- fix macro condition check for vulkan libs
+
+* Thu Dec 20 2018 Nicolas Chauvet <kwizart@gmail.com> - 1.0.0.59-2
+- Drop vulkan on el7 for now
 
 * Fri Dec 14 2018 Simone Caronni <negativo17@gmail.com> - 1.0.0.59-1
 - Update to 1.0.0.59.
