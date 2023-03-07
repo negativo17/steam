@@ -4,7 +4,7 @@
 %global appstream_id com.valvesoftware.Steam
 
 Name:           steam
-Version:        1.0.0.75
+Version:        1.0.0.76
 Release:        1%{?dist}
 Summary:        Installer for the Steam software distribution service
 # Redistribution and repackaging for Linux is allowed, see license file. udev rules are MIT.
@@ -82,6 +82,7 @@ Requires:       libXinerama%{?_isa}
 Requires:       libXtst%{?_isa}
 Requires:       libXScrnSaver%{?_isa}
 Requires:       mesa-libGL%{?_isa}
+Requires:       mesa-libEGL%{?_isa}
 Requires:       NetworkManager-libnm%{?_isa}
 Requires:       nss%{?_isa}
 Requires:       pulseaudio-libs%{?_isa}
@@ -235,6 +236,9 @@ fi
 %{_udevrulesdir}/*
 
 %changelog
+* Tue Mar 07 2023 Simone Caronni <negativo17@gmail.com> - 1.0.0.76-1
+- Update to 1.0.0.76.
+
 * Fri Jul 22 2022 Simone Caronni <negativo17@gmail.com> - 1.0.0.75-1
 - Update to 1.0.0.75.
 
