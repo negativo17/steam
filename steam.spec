@@ -41,10 +41,6 @@ BuildRequires:  desktop-file-utils
 BuildRequires:  make
 BuildRequires:  systemd
 
-%if 0%{?fedora} || 0%{?rhel} >= 8
-BuildRequires:  libappstream-glib
-%endif
-
 # Required to run the initial setup
 Requires:       tar
 Requires:       zenity
@@ -59,23 +55,14 @@ Requires:       mesa-dri-drivers%{?_isa}
 Requires:       mesa-dri-drivers
 Requires:       mesa-vulkan-drivers%{?_isa}
 Requires:       mesa-vulkan-drivers
-%if 0%{?rhel} == 7
 Requires:       vulkan%{?_isa}
 Requires:       vulkan
-%else
-Requires:       vulkan-loader%{?_isa}
-Requires:       vulkan-loader
-%endif
 
 # Minimum requirements for starting the steam client using system libraries
 Requires:       alsa-lib%{?_isa}
 Requires:       fontconfig%{?_isa}
 Requires:       gtk2%{?_isa}
 Requires:       libICE%{?_isa}
-%if 0%{?fedora} || 0%{?rhel} > 8
-Requires:       libnsl%{?_isa}
-Requires:       libxcrypt-compat%{?_isa}
-%endif
 Requires:       libpng12%{?_isa}
 Requires:       libXext%{?_isa}
 Requires:       libXinerama%{?_isa}
@@ -110,27 +97,7 @@ Requires:       libdbusmenu-gtk3%{?_isa} >= 16.04.0
 Requires:       libatomic%{?_isa}
 
 # Required by Shank
-%if 0%{?fedora}
-Requires:       (alsa-plugins-pulseaudio%{?_isa} if pulseaudio)
-Requires:       (pipewire-alsa%{?_isa} if pipewire)
-%else
 Requires:       alsa-plugins-pulseaudio%{?_isa}
-%endif
-
-# Game performance is increased with gamemode (for games that support it)
-%if 0%{?fedora} || 0%{?rhel} >= 8
-Recommends:     gamemode
-Recommends:     gamemode%{?_isa}
-Recommends:     (gnome-shell-extension-gamemode if gnome-shell)
-Recommends:     (gnome-shell-extension-appindicator if gnome-shell)
-%endif
-
-# Proton uses xdg-desktop-portal to open URLs from inside a container
-%if 0%{?fedora}
-Requires:       xdg-desktop-portal
-Recommends:     (xdg-desktop-portal-gtk if gnome-shell)
-Recommends:     (xdg-desktop-portal-kde if kwin)
-%endif
 
 Requires:       steam-devices = %{?epoch:%{epoch}:}%{version}-%{release}
 
@@ -160,9 +127,7 @@ This package contains the necessary permissions for gaming devices.
 cp %{SOURCE5} .
 
 # Remove too new desktop menu spec (Gnome >= 3.37.2)
-%if 0%{?rhel} == 8 || 0%{?rhel} == 7
 sed -i -e '/PrefersNonDefaultGPU/d' steam.desktop
-%endif
 
 %build
 # Nothing to build
@@ -171,7 +136,9 @@ sed -i -e '/PrefersNonDefaultGPU/d' steam.desktop
 %make_install
 
 rm -fr %{buildroot}%{_docdir}/%{name}/ \
-    %{buildroot}%{_bindir}/%{name}deps
+    %{buildroot}%{_bindir}/%{name}deps \
+    %{buildroot}%{_datadir}/metainfo
+
 
 mkdir -p %{buildroot}%{_udevrulesdir}/
 install -m 644 -p %{SOURCE6} %{SOURCE8} %{SOURCE9} \
@@ -189,14 +156,8 @@ install -m 644 -p %{SOURCE7} %{buildroot}%{_prefix}/lib/systemd/user.conf.d/
 
 %check
 desktop-file-validate %{buildroot}%{_datadir}/applications/%{name}.desktop
-%if 0%{?fedora} || 0%{?rhel} >= 8
-appstream-util validate-relax --nonet %{buildroot}%{_metainfodir}/%{appstream_id}.metainfo.xml
-%else
-rm -fr %{buildroot}%{_datadir}/metainfo
-%endif
 
 %post
-%if 0%{?rhel} == 7
 /bin/touch --no-create %{_datadir}/icons/hicolor &>/dev/null || :
 /usr/bin/update-desktop-database &> /dev/null || :
 
@@ -211,8 +172,6 @@ fi
 %posttrans
 %{_bindir}/gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 
-%endif
-
 %files
 %license COPYING steam_subscriber_agreement.txt
 %doc debian/changelog README.Fedora
@@ -223,9 +182,6 @@ fi
 %{_datadir}/pixmaps/%{name}_tray_mono.png
 %{_libdir}/%{name}/
 %{_mandir}/man6/%{name}.*
-%if 0%{?fedora} || 0%{?rhel} >= 8
-%{_metainfodir}/%{appstream_id}.metainfo.xml
-%endif
 %config(noreplace) %{_sysconfdir}/profile.d/%{name}.*sh
 %dir %{_prefix}/lib/systemd/system.conf.d/
 %{_prefix}/lib/systemd/system.conf.d/01-steam.conf
@@ -238,6 +194,8 @@ fi
 %changelog
 * Tue Mar 07 2023 Simone Caronni <negativo17@gmail.com> - 1.0.0.76-1
 - Update to 1.0.0.76.
+- Separate SPEC file per distribution.
+- Trim changelog.
 
 * Fri Jul 22 2022 Simone Caronni <negativo17@gmail.com> - 1.0.0.75-1
 - Update to 1.0.0.75.
