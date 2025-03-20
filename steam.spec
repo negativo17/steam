@@ -5,7 +5,7 @@
 
 Name:           steam
 Version:        1.0.0.82
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Installer for the Steam software distribution service
 # Redistribution and repackaging for Linux is allowed, see license file. udev rules are MIT.
 License:        Steam License Agreement and MIT
@@ -17,21 +17,8 @@ Source1:        %{name}.sh
 Source2:        %{name}.csh
 Source5:        README.Fedora
 
-# Ghost touches in Big Picture mode:
-# https://github.com/ValveSoftware/steam-for-linux/issues/3384
-# https://bugzilla.kernel.org/show_bug.cgi?id=28912
-# https://github.com/denilsonsa/udev-joystick-blacklist
-# https://github.com/systemd/systemd/issues/32773
-
-# Input devices seen as joysticks:
-Source6:        61-these-are-not-joystick.hwdb
-
 # Configure limits in systemd
 Source7:        01-steam.conf
-
-# Newer udev rules than what is bundled in the tarball
-Source8:        https://raw.githubusercontent.com/ValveSoftware/steam-devices/master/60-steam-input.rules
-Source9:        https://raw.githubusercontent.com/ValveSoftware/steam-devices/master/60-steam-vr.rules
 
 # Do not install desktop file in lib/steam, do not install apt sources
 Patch0:         %{name}-makefile.patch
@@ -123,7 +110,7 @@ Recommends:     xdg-user-dirs
 # Allow using Steam Runtime Launch Options
 Recommends:     gobject-introspection
 
-Requires:       steam-devices = %{?epoch:%{epoch}:}%{version}-%{release}
+Requires:       steam-devices
 
 %description
 Steam is a software distribution service with an online store, automated
@@ -131,19 +118,6 @@ installation, automatic updates, achievements, SteamCloud synchronized savegame
 and screenshot functionality, and many social features.
 
 This package contains the installer for the Steam software distribution service.
-
-%package        devices
-Summary:        Permissions required by Steam for gaming devices
-BuildArch:      noarch
-Provides:       steam-devices = %{?epoch:%{epoch}:}%{version}-%{release}
-Obsoletes:      steam-devices < %{?epoch:%{epoch}:}%{version}-%{release}
-
-%description    devices
-Steam is a software distribution service with an online store, automated
-installation, automatic updates, achievements, SteamCloud synchronized savegame
-and screenshot functionality, and many social features.
-
-This package contains the necessary permissions for gaming devices.
 
 %prep
 %autosetup -p1 -n %{name}-launcher
@@ -161,12 +135,6 @@ sed -i -e '/PrefersNonDefaultGPU/d' steam.desktop
 
 rm -fr %{buildroot}%{_docdir}/%{name}/ \
     %{buildroot}%{_bindir}/%{name}deps
-
-mkdir -p %{buildroot}%{_udevhwdbdir}/
-install -m 644 -p %{SOURCE6} %{buildroot}%{_udevhwdbdir}/
-
-mkdir -p %{buildroot}%{_udevrulesdir}/
-install -m 644 -p %{SOURCE8} %{SOURCE9} %{buildroot}%{_udevrulesdir}/
 
 # Environment files
 mkdir -p %{buildroot}%{_sysconfdir}/profile.d
@@ -199,11 +167,12 @@ appstream-util validate-relax --nonet %{buildroot}%{_metainfodir}/%{appstream_id
 %dir %{_prefix}/lib/systemd/user.conf.d/
 %{_prefix}/lib/systemd/user.conf.d/01-steam.conf
 
-%files devices
-%{_udevhwdbdir}/*
-%{_udevrulesdir}/*
-
 %changelog
+* Thu Mar 20 2025 Simone Caronni <negativo17@gmail.com> - 1.0.0.82-2
+- Drop steam-devices subpackage.
+- Update README.Fedora.
+- Trim changelog.
+
 * Mon Nov 04 2024 Simone Caronni <negativo17@gmail.com> - 1.0.0.82-1
 - Update to 1.0.0.82.
 
@@ -233,62 +202,3 @@ appstream-util validate-relax --nonet %{buildroot}%{_metainfodir}/%{appstream_id
 
 * Mon Jan 22 2024 Simone Caronni <negativo17@gmail.com> - 1.0.0.78-2
 - Update udev rules.
-
-* Thu May 11 2023 Simone Caronni <negativo17@gmail.com> - 1.0.0.78-1
-- Update to 1.0.0.78.
-
-* Tue Mar 07 2023 Simone Caronni <negativo17@gmail.com> - 1.0.0.76-1
-- Update to 1.0.0.76.
-- Separate SPEC file per distribution.
-- Trim changelog.
-
-* Fri Jul 22 2022 Simone Caronni <negativo17@gmail.com> - 1.0.0.75-1
-- Update to 1.0.0.75.
-
-* Fri Feb 04 2022 Simone Caronni <negativo17@gmail.com> - 1.0.0.74-2
-- Add gnome-shell-extension-appindicator if running on Gnome (#6194).
-- Require libICE to avoid spamming the console. It's installed by default on a
-  Gnome installation but not explicitly required (#6195).
-
-* Fri Dec 10 2021 Simone Caronni <negativo17@gmail.com> - 1.0.0.74-1
-- Update to 1.0.0.74.
-
-* Sat Nov 20 2021 Simone Caronni <negativo17@gmail.com> - 1.0.0.73-1
-- Update to 1.0.0.73.
-
-* Sat Oct 09 2021 Simone Caronni <negativo17@gmail.com> - 1.0.0.72-1
-- Update to 1.0.0.72.
-
-* Fri Aug 27 2021 Simone Caronni <negativo17@gmail.com> - 1.0.0.71-4
-- Remove old noruntime provide/obsolete.
-- Remove VA-API driver dependencies for RHEL/CentOS 7 and update relevant
-  information.
-- Remove not really relevant information about controllers from the readme.
-- Update steam-devices.
-
-* Sun Aug 15 2021 Simone Caronni <negativo17@gmail.com> - 1.0.0.71-2
-- Steam UDEV subpackage should be noarch.
-
-* Sun Aug 15 2021 Simone Caronni <negativo17@gmail.com> - 1.0.0.71-1
-- Update to 1.0.0.71.
-- Update README.Fedora with supported controllers.
-- Use bundled AppData.
-
-* Wed Aug 04 2021 RPM Fusion Release Engineering <leigh123linux@gmail.com> - 1.0.0.70-5
-- Rebuilt for https://fedoraproject.org/wiki/Fedora_35_Mass_Rebuild
-
-* Wed Jun 30 2021 Simone Caronni <negativo17@gmail.com> - 1.0.0.70-4
-- Separate udev rules in separate subpackage to be used also by Valve's Flatpak
-  Steam client.
-- Use upstream's udev rules as those are newer than what is bundled in the
-  installer tarball.
-
-* Mon Apr 12 2021 Simone Caronni <negativo17@gmail.com> - 1.0.0.70-2
-- Remove new desktop entry specification for Fedora 32 and RHEL/CentOS 7/8.
-
-* Mon Apr 12 2021 Simone Caronni <negativo17@gmail.com> - 1.0.0.70-1
-- Update to 1.0.0.70.
-- Switch to tarball provided steam-devices udev rules.
-
-* Thu Feb 04 2021 RPM Fusion Release Engineering <leigh123linux@gmail.com> - 1.0.0.68-7
-- Rebuilt for https://fedoraproject.org/wiki/Fedora_34_Mass_Rebuild
