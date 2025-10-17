@@ -4,8 +4,8 @@
 %global appstream_id com.valvesoftware.Steam
 
 Name:           steam
-Version:        1.0.0.83
-Release:        2%{?dist}
+Version:        1.0.0.85
+Release:        1%{?dist}
 Summary:        Installer for the Steam software distribution service
 # Redistribution and repackaging for Linux is allowed, see license file. udev rules are MIT.
 License:        Steam License Agreement and MIT
@@ -176,6 +176,9 @@ appstream-util validate-relax --nonet %{buildroot}%{_metainfodir}/%{appstream_id
 %endif
 
 %changelog
+* Fri Oct 17 2025 Simone Caronni <negativo17@gmail.com> - 1.0.0.85-1
+- Update to 1.0.0.85.
+
 * Sun Sep 07 2025 Simone Caronni <negativo17@gmail.com> - 1.0.0.83-2
 - Load ntsync module.
 
