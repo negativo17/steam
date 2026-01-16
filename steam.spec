@@ -5,7 +5,7 @@
 
 Name:           steam
 Version:        1.0.0.85
-Release:        2%{?dist}
+Release:        3%{?dist}
 Summary:        Installer for the Steam software distribution service
 # Redistribution and repackaging for Linux is allowed, see license file. udev rules are MIT.
 License:        Steam License Agreement and MIT
@@ -33,6 +33,7 @@ BuildRequires:  systemd
 # Required to run the initial setup
 Requires:       tar
 Requires:       zenity
+Requires:       xz
 
 # Most games use OpenGL, some games already use Vulkan. Vulkan is also required
 # for Steam Play to run Windows games through emulation. i686 version of these
@@ -169,6 +170,9 @@ appstream-util validate-relax --nonet %{buildroot}%{_metainfodir}/%{appstream_id
 %{_prefix}/lib/systemd/user.conf.d/01-steam.conf
 
 %changelog
+* Fri Jan 16 2026 Simone Caronni <negativo17@gmail.com> - 1.0.0.85-3
+- Requires xz for initial setup.
+
 * Wed Nov 26 2025 Simone Caronni <negativo17@gmail.com> - 1.0.0.85-2
 - Do not provide ntsync loading mechanism, require the ntsync-autoload package
   (ntsync is not yet enabled in official Proton versions).
