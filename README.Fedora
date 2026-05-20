@@ -83,13 +83,13 @@ additional inbound ports.
 Joysticks, keyboards and game pads
 ==================================
 
-The package contains the UDEV rules for lots of gamepads as presented in the
+The package pulls in the UDEV rules for lots of gamepads as presented in the
 Steam devices repository (https://github.com/ValveSoftware/steam-devices).
 Also it contains an additional hwdb file to make sure some multimedia keyboards
 and tablet devices are properly detected as game pads and not mouses.
 
-Steam Controller
-================
+Steam Controller (2015)
+=======================
 
 To use the Steam Controller as a normal gamepad you require the Steam client to
 be running and the user requiring Gamepad emulation needs to be in the 'input'
