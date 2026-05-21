@@ -3,7 +3,7 @@
 
 Name:           steam
 Version:        1.0.0.85
-Release:        8%{?dist}
+Release:        9%{?dist}
 Summary:        Installer for the Steam software distribution service
 # Redistribution and repackaging for Linux is allowed, see license file
 License:        Steam License Agreement
@@ -47,7 +47,7 @@ Requires:       vulkan-loader
 Requires:       vulkan-loader(x86-32)
 
 # Hardware stuff (permissions on devices, hardware updater, etc.):
-Requires:       hidapi
+Recommends:     hidapi
 Requires:       steam-devices
 
 # These libraries are also part of the Ubuntu runtime at:
@@ -188,6 +188,9 @@ appstream-util validate-relax --nonet %{buildroot}%{_metainfodir}/%{appstream_id
 %{_prefix}/lib/systemd/user.conf.d/01-steam.conf
 
 %changelog
+* Thu May 21 2026 Simone Caronni <negativo17@gmail.com> - 1.0.0.85-9
+- Recommend hidapi as it's temporary and in the devel repository for RHEL.
+
 * Thu May 21 2026 Simone Caronni <negativo17@gmail.com> - 1.0.0.85-8
 - RHEL does not have SDL3 packages, and the client is all SDL3 based.
 
