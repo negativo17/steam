@@ -2,8 +2,8 @@
 %global appstream_id com.valvesoftware.Steam
 
 Name:           steam
-Version:        1.0.0.85
-Release:        11%{?dist}
+Version:        1.0.0.86
+Release:        1%{?dist}
 Summary:        Installer for the Steam software distribution service
 # Redistribution and repackaging for Linux is allowed, see license file
 License:        Steam License Agreement
@@ -87,7 +87,7 @@ Requires:       pipewire-libs
 Requires:       pipewire-libs(x86-32)
 Requires:       pulseaudio-libs
 Requires:       pulseaudio-libs(x86-32)
-%if 0%{?fedora}
+%if 0%{?fedora} || 0%{?rhel} >= 10
 Requires:       SDL3
 Requires:       SDL3(x86-32)
 %endif
@@ -204,6 +204,9 @@ appstream-util validate-relax --nonet %{buildroot}%{_metainfodir}/%{appstream_id
 %files arch-transition
 
 %changelog
+* Fri Jun 19 2026 Simone Caronni <negativo17@gmail.com> - 1.0.0.86-1
+- Update to 1.0.0.86.
+
 * Wed Jun 03 2026 Simone Caronni <negativo17@gmail.com> - 1.0.0.85-11
 - Latest client statically links libhidapi where required.
 
