@@ -63,8 +63,6 @@ Requires:       libICE
 Requires:       libICE(x86-32)
 Requires:       libnsl
 Requires:       libnsl(x86-32)
-#Requires:       libpng
-#Requires:       libpng(x86-32)
 Requires:       libXext
 Requires:       libXext(x86-32)
 Requires:       libXinerama
