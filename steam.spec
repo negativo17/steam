@@ -3,7 +3,7 @@
 
 Name:           steam
 Version:        1.0.0.87
-Release:        2%{?dist}
+Release:        3%{?dist}
 Summary:        Installer for the Steam software distribution service
 # Redistribution and repackaging for Linux is allowed, see license file
 License:        Steam License Agreement
@@ -48,6 +48,9 @@ Requires:       vulkan-loader(x86-32)
 
 # Hardware stuff (permissions on devices, hardware updater, etc.):
 Requires:       steam-devices
+
+# The client, Steam Overlay etc. are all X based
+Requires:       xorg-x11-server-Xwayland
 
 # These libraries are also part of the Ubuntu runtime at:
 #   ~/.local/share/Steam/ubuntu12_32
@@ -204,6 +207,9 @@ appstream-util validate-relax --nonet %{buildroot}%{_metainfodir}/%{appstream_id
 %files arch-transition
 
 %changelog
+* Wed Sep 30 2026 Simone Caronni <negativo17@gmail.com> - 1.0.0.87-3
+- Require Xwayland.
+
 * Sun Sep 20 2026 Simone Caronni <negativo17@gmail.com> - 1.0.0.87-2
 - Add back mesa-libEGL.i686 dependency.
 
