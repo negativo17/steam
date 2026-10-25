@@ -3,7 +3,7 @@
 
 Name:           steam
 Version:        1.0.0.87
-Release:        3%{?dist}
+Release:        4%{?dist}
 Summary:        Installer for the Steam software distribution service
 # Redistribution and repackaging for Linux is allowed, see license file
 License:        Steam License Agreement
@@ -136,6 +136,10 @@ Recommends:     gobject-introspection
 # Automatic loading of the ntsync module
 Recommends:     ntsync-autoload
 
+# Performance overlay with gamescope
+Recommends:     gamescope
+Recommends:     mangohud
+
 %description
 Steam is a software distribution service with an online store, automated
 installation, automatic updates, achievements, SteamCloud synchronized savegame
@@ -207,6 +211,10 @@ appstream-util validate-relax --nonet %{buildroot}%{_metainfodir}/%{appstream_id
 %files arch-transition
 
 %changelog
+* Sun Oct 25 2026 Simone Caronni <negativo17@gmail.com> - 1.0.0.87-4
+- Add gamescope and mangohud recommendations.
+- Trim changelog.
+
 * Wed Sep 30 2026 Simone Caronni <negativo17@gmail.com> - 1.0.0.87-3
 - Require Xwayland.
 
@@ -252,51 +260,3 @@ appstream-util validate-relax --nonet %{buildroot}%{_metainfodir}/%{appstream_id
 
 * Fri Jan 16 2026 Simone Caronni <negativo17@gmail.com> - 1.0.0.85-3
 - Requires xz for initial setup.
-
-* Wed Nov 26 2025 Simone Caronni <negativo17@gmail.com> - 1.0.0.85-2
-- Do not provide ntsync loading mechanism, require the ntsync-autoload package
-  (ntsync is not yet enabled in official Proton versions).
-
-* Fri Oct 17 2025 Simone Caronni <negativo17@gmail.com> - 1.0.0.85-1
-- Update to 1.0.0.85.
-
-* Sun Sep 07 2025 Simone Caronni <negativo17@gmail.com> - 1.0.0.83-2
-- Load ntsync module.
-
-* Sat May 10 2025 Simone Caronni <negativo17@gmail.com> - 1.0.0.83-1
-- Update to 1.0.0.83.
-
-* Thu Mar 20 2025 Simone Caronni <negativo17@gmail.com> - 1.0.0.82-2
-- Drop steam-devices subpackage.
-- Update README.Fedora.
-- Trim changelog.
-
-* Mon Nov 04 2024 Simone Caronni <negativo17@gmail.com> - 1.0.0.82-1
-- Update to 1.0.0.82.
-
-* Sun Sep 01 2024 Simone Caronni <negativo17@gmail.com> - 1.0.0.81-1
-- Update to 1.0.0.81.
-
-* Mon Aug 05 2024 Simone Caronni <negativo17@gmail.com> - 1.0.0.79-6
-- Fix for #9 (thanks zeroepoch).
-
-* Mon Jun 24 2024 Simone Caronni <negativo17@gmail.com> - 1.0.0.79-5
-- Update udev rules.
-- Convert udev rule for blocking wrong joystick devices to a systemd hwdb file:
-  https://github.com/denilsonsa/udev-joystick-blacklist/issues/58
-
-* Mon Jun 24 2024 Simone Caronni <negativo17@gmail.com> - 1.0.0.79-4
-- Add dependencies when full desktop is not installed.
-- Add dependencies for using steam-runtime-launch-options.
-
-* Tue Mar 19 2024 Simone Caronni <negativo17@gmail.com> - 1.0.0.79-3
-- Adjust requirements.
-
-* Sun Feb 18 2024 Simone Caronni <negativo17@gmail.com> - 1.0.0.79-2
-- Do not recommend gnome-shell-extension-gamemode.
-
-* Mon Feb 12 2024 Simone Caronni <negativo17@gmail.com> - 1.0.0.79-1
-- Update to 1.0.0.79.
-
-* Mon Jan 22 2024 Simone Caronni <negativo17@gmail.com> - 1.0.0.78-2
-- Update udev rules.
